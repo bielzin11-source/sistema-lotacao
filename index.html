@@ -1,186 +1,125 @@
-<!-- 
-  INSTRUÇÕES PARA GITHUB PAGES:
-  1. Renomeie este arquivo para "index.html". Este é o arquivo que o GitHub Pages irá carregar como página inicial.
-  2. Certifique-se de que os arquivos "admin-dashboard.html" and "gestor-dashboard.html" estão no mesmo diretório 
-     deste arquivo no seu repositório do GitHub.
--->
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema de Lotação</title>
-    
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1d72b8, #3fa9f5);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-container {
-            background: white;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            width: 320px;
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 30px;
-            color: #1d72b8;
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            box-sizing: border-box; /* Garante que o padding não afete a largura total */
-        }
-
-        input:focus {
-            border-color: #1d72b8;
-            outline: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #1d72b8;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.25s;
-        }
-
-        button:hover {
-            background-color: #1662a1;
-        }
-
-        .message {
-            color: red;
-            margin-top: 10px;
-            font-weight: 600;
-            min-height: 24px; /* Evita que o layout mude quando a mensagem aparece */
-        }
-        
-        /* Estilo para a mensagem de sucesso */
-        .message.success {
-            color: green;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Sistema de Lotação</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1d72b8, #3fa9f5);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .login-container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 320px;
+      text-align: center;
+    }
+    h2 { margin-bottom: 30px; color: #1d72b8; }
+    label {
+      display: block; text-align: left;
+      margin-bottom: 5px; font-weight: 600; color: #333;
+    }
+    input {
+      width: 100%; padding: 10px 15px; margin-bottom: 20px;
+      border-radius: 6px; border: 1px solid #ccc;
+      font-size: 16px; box-sizing: border-box;
+    }
+    input:focus {
+      border-color: #1d72b8; outline: none;
+    }
+    button {
+      width: 100%; padding: 12px;
+      background-color: #1d72b8;
+      border: none; border-radius: 8px;
+      color: white; font-weight: 700;
+      font-size: 16px; cursor: pointer;
+      transition: background-color 0.25s;
+    }
+    button:hover { background-color: #1662a1; }
+    .message {
+      color: red; margin-top: 10px;
+      font-weight: 600; min-height: 24px;
+    }
+    .message.success { color: green; }
+  </style>
 </head>
 <body>
+  <div class="login-container">
+    <h2>Sistema de Lotação</h2>
+    <form id="loginForm">
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" name="cpf" placeholder="Digite seu CPF" required />
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
+      <button type="submit">Entrar</button>
+    </form>
+    <p id="message" class="message"></p>
+  </div>
 
-    <div class="login-container">
-        <h2>Sistema de Lotação</h2>
-        
-        <form id="loginForm">
-            <div>
-                <label for="cpf">CPF</label>
-                <input type="text" id="cpf" name="cpf" placeholder="Digite seu CPF" required>
-            </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
 
-            <div>
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
-            </div>
+      const cpf = document.getElementById('cpf').value;
+      const senha = document.getElementById('senha').value;
+      const messageElement = document.getElementById('message');
 
-            <button type="submit">Entrar</button>
-        </form>
-        
-        <p id="message" class="message"></p>
-    </div>
+      messageElement.textContent = 'Verificando...';
+      messageElement.classList.remove('success');
 
-    <script>
-        // Adiciona um listener para o formulário de login
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            // Previne o envio padrão do formulário
-            event.preventDefault();
+      fetch('https://script.google.com/macros/s/AKfycbxjp2F9Bl0COsFyFS9RiEGSwvMZijPzgvfCBURd4kfDfwIL4sGmxQ9g-LqohEQJ8epHlQ/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cpf, senha })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          messageElement.textContent = 'Login bem-sucedido! Redirecionando...';
+          messageElement.classList.add('success');
 
-            const cpf = document.getElementById('cpf').value;
-            const senha = document.getElementById('senha').value;
-            const messageElement = document.getElementById('message');
-            
-            // Exibe uma mensagem de carregamento para o usuário
-            messageElement.textContent = 'Verificando...';
-            messageElement.classList.remove('success');
+          localStorage.setItem("cpf", cpf);
+          localStorage.setItem("nome", data.nome);
+          localStorage.setItem("acesso", data.acesso);
+          localStorage.setItem("escola", data.escola || "");
 
-            // Faz a requisição para a API do Google Script
-            fetch('https://script.google.com/macros/s/AKfycbxjp2F9Bl0COsFyFS9RiEGSwvMZijPzgvfCBURd4kfDfwIL4sGmxQ9g-LqohEQJ8epHlQ/exec', {
-                method: 'POST',
-                mode: 'cors', 
-                body: JSON.stringify({ cpf: cpf, senha: senha }),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    messageElement.textContent = 'Login bem-sucedido! Redirecionando...';
-                    messageElement.classList.add('success');
+          setTimeout(() => {
+            if (data.acesso === "ADMINISTRADOR") {
+              window.location.href = "admin-dashboard.html";
+            } else if (data.acesso === "GESTOR") {
+              window.location.href = "gestor-dashboard.html";
+            } else {
+              messageElement.textContent = 'Acesso desconhecido.';
+            }
+          }, 1500);
+        } else {
+          messageElement.textContent = data.mensagem || 'CPF ou senha inválidos!';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        messageElement.textContent = 'Erro ao conectar com o servidor.';
+      });
+    });
 
-                    // Salvando os dados do usuário no localStorage para uso futuro
-                    localStorage.setItem("cpf", data.cpf);
-                    localStorage.setItem("nome", data.nome);
-                    localStorage.setItem("acesso", data.acesso);
-                    localStorage.setItem("escola", data.escola || ""); 
-
-                    // Redireciona o usuário com base no seu nível de acesso
-                    setTimeout(() => {
-                        if (data.acesso === "ADMINISTRADOR") {
-                            // O arquivo "admin-dashboard.html" precisa estar no repositório
-                            window.location.href = "admin-dashboard.html";
-                        } else if (data.acesso === "GESTOR") {
-                            // O arquivo "gestor-dashboard.html" precisa estar no repositório
-                            window.location.href = "gestor-dashboard.html";
-                        } else {
-                            messageElement.textContent = 'Nível de acesso desconhecido.';
-                            messageElement.classList.remove('success');
-                        }
-                    }, 1500);
-
-                } else {
-                    messageElement.textContent = data.message || 'CPF ou senha inválidos!';
-                    messageElement.classList.remove('success');
-                }
-            })
-            .catch(err => {
-                console.error('Erro na requisição:', err);
-                messageElement.textContent = 'Erro ao conectar com o servidor.';
-                messageElement.classList.remove('success');
-            });
-        });
-
-        // Adiciona uma máscara para o campo de CPF enquanto o usuário digita
-        const cpfInput = document.getElementById('cpf');
-        cpfInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            e.target.value = value;
-        });
-    </script>
+    document.getElementById('cpf').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      e.target.value = value;
+    });
+  </script>
 </body>
 </html>
