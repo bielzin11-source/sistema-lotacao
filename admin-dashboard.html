@@ -1,36 +1,261 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard - Administrador</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Administrador - Sistema de Lotação</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Estilo para o item de menu ativo */
+        .sidebar-link.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        /* Esconde as seções por padrão */
+        .content-section {
+            display: none;
+        }
+        /* Mostra a seção ativa */
+        .content-section.active {
+            display: block;
+        }
+    </style>
 </head>
-<body>
-  <h1>Bem-vindo, <span id="nome"></span> (Administrador)</h1>
+<body class="flex h-screen bg-gray-100">
 
-  <nav>
-    <button onclick="mostrarSecao('lotacoes')">Lotação Geral</button>
-    <button onclick="mostrarSecao('relatorios')">Relatórios</button>
-    <button onclick="mostrarSecao('junta')">Junta Médica</button>
-    <button onclick="mostrarSecao('licenca')">Licença Prêmio</button>
-    <button onclick="mostrarSecao('memorando')">Gerar Memorando</button>
-  </nav>
+    <!-- Sidebar (Menu Lateral) -->
+    <aside class="w-64 bg-gray-800 text-white flex flex-col">
+        <div class="h-16 flex items-center justify-center text-xl font-bold border-b border-gray-700">
+            Sistema de Lotação
+        </div>
+        <nav class="flex-1 px-4 py-4 space-y-2">
+            <a href="#lotações" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition duration-200 hover:bg-gray-700 active">
+                <i data-feather="users" class="w-5 h-5 mr-3"></i>
+                Lotações
+            </a>
+            <a href="#relatorios" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition duration-200 hover:bg-gray-700">
+                <i data-feather="file-text" class="w-5 h-5 mr-3"></i>
+                Relatórios
+            </a>
+            <a href="#junta-medica" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition duration-200 hover:bg-gray-700">
+                <i data-feather="activity" class="w-5 h-5 mr-3"></i>
+                Junta Médica
+            </a>
+            <a href="#licenca-premio" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition duration-200 hover:bg-gray-700">
+                <i data-feather="award" class="w-5 h-5 mr-3"></i>
+                Licença Prêmio
+            </a>
+            <a href="#memorando" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition duration-200 hover:bg-gray-700">
+                <i data-feather="edit" class="w-5 h-5 mr-3"></i>
+                Gerar Memorando
+            </a>
+        </nav>
+        <div class="px-4 py-4 border-t border-gray-700">
+            <a href="index.html" class="flex items-center px-4 py-2.5 rounded-lg transition duration-200 hover:bg-gray-700">
+                <i data-feather="log-out" class="w-5 h-5 mr-3"></i>
+                Sair
+            </a>
+        </div>
+    </aside>
 
-  <section id="lotacoes">Carregando todas as lotações...</section>
-  <section id="relatorios" style="display:none;">Gerar relatórios por escola ou geral.</section>
-  <section id="junta" style="display:none;">Painel da junta médica.</section>
-  <section id="licenca" style="display:none;">Controle de licença prêmio.</section>
-  <section id="memorando" style="display:none;">Gerador de memorando de lotação.</section>
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-md p-4 flex justify-between items-center">
+            <h1 id="header-title" class="text-2xl font-bold text-gray-800">Lotações</h1>
+            <div>
+                <span id="user-greeting" class="text-gray-600"></span>
+            </div>
+        </header>
 
-  <script>
-    document.getElementById("nome").innerText = localStorage.getItem("nome");
+        <!-- Content Area -->
+        <main class="flex-1 p-6 lg:p-8 overflow-y-auto">
+            
+            <!-- Seção de Lotações -->
+            <section id="lotações" class="content-section active">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-semibold mb-4">Acesso a Todas as Lotações</h2>
+                    <!-- Filtros e Busca -->
+                    <div class="mb-4 flex space-x-4">
+                        <input type="text" placeholder="Buscar por nome ou CPF..." class="w-1/3 px-4 py-2 border rounded-lg">
+                        <select class="w-1/4 px-4 py-2 border rounded-lg">
+                            <option value="">Filtrar por Escola</option>
+                            <option value="escola1">Escola A</option>
+                            <option value="escola2">Escola B</option>
+                        </select>
+                        <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Buscar</button>
+                    </div>
+                    <!-- Tabela de Lotações -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3">Nome</th>
+                                    <th class="px-6 py-3">Cargo</th>
+                                    <th class="px-6 py-3">Escola de Lotação</th>
+                                    <th class="px-6 py-3">Status</th>
+                                    <th class="px-6 py-3">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Exemplo de Linha -->
+                                <tr class="bg-white border-b">
+                                    <td class="px-6 py-4 font-medium text-gray-900">João da Silva</td>
+                                    <td class="px-6 py-4">Professor</td>
+                                    <td class="px-6 py-4">E.E. Monteiro Lobato</td>
+                                    <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Ativo</span></td>
+                                    <td class="px-6 py-4"><a href="#" class="text-indigo-600 hover:underline">Detalhes</a></td>
+                                </tr>
+                                <!-- Adicione mais linhas aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
-    function mostrarSecao(secao) {
-      document.querySelectorAll("section").forEach(s => s.style.display = "none");
-      document.getElementById(secao).style.display = "block";
-    }
+            <!-- Seção de Relatórios -->
+            <section id="relatorios" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-semibold mb-4">Gerador de Relatórios</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="report-type" class="block text-sm font-medium text-gray-700">Tipo de Relatório</label>
+                            <select id="report-type" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                <option>Geral</option>
+                                <option>Por Unidade Escolar</option>
+                                <option>Por Cargo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="school-unit" class="block text-sm font-medium text-gray-700">Unidade (se aplicável)</label>
+                            <select id="school-unit" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                <option>Todas</option>
+                                <option>Escola A</option>
+                                <option>Escola B</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="date-range" class="block text-sm font-medium text-gray-700">Período</label>
+                            <input type="date" id="date-range" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Gerar Relatório</button>
+                    </div>
+                </div>
+            </section>
 
-    // Aqui você poderá carregar os dados da planilha usando a API
-  </script>
+            <!-- Seção de Junta Médica -->
+            <section id="junta-medica" class="content-section">
+                 <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-semibold mb-4">Controle da Junta Médica</h2>
+                     <p class="text-gray-600">Em desenvolvimento...</p>
+                </div>
+            </section>
+
+            <!-- Seção de Licença Prêmio -->
+            <section id="licenca-premio" class="content-section">
+                 <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-semibold mb-4">Controle de Licença Prêmio</h2>
+                     <p class="text-gray-600">Em desenvolvimento...</p>
+                </div>
+            </section>
+
+            <!-- Seção de Memorando -->
+            <section id="memorando" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h2 class="text-xl font-semibold mb-4">Geração de Memorando de Lotação</h2>
+                    <form>
+                        <div class="mb-4">
+                            <label for="memo-to" class="block text-sm font-medium text-gray-700">Para (Nome do Servidor)</label>
+                            <input type="text" id="memo-to" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                         <div class="mb-4">
+                            <label for="memo-school" class="block text-sm font-medium text-gray-700">Escola de Destino</label>
+                            <input type="text" id="memo-school" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label for="memo-subject" class="block text-sm font-medium text-gray-700">Assunto</label>
+                            <input type="text" id="memo-subject" value="Memorando de Lotação" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div class="mt-6">
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Gerar Memorando (PDF)</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Ativa os ícones do Feather
+        feather.replace();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('.sidebar-link');
+            const sections = document.querySelectorAll('.content-section');
+            const headerTitle = document.getElementById('header-title');
+            const userGreeting = document.getElementById('user-greeting');
+
+            // Pega o nome do usuário do localStorage para saudação
+            const userName = localStorage.getItem('nome');
+            if (userName) {
+                userGreeting.textContent = `Bem-vindo(a), ${userName.split(' ')[0]}!`;
+            }
+
+            // Função para trocar de aba
+            function changeTab(hash) {
+                // Remove a classe 'active' de todos os links e seções
+                links.forEach(link => link.classList.remove('active'));
+                sections.forEach(section => section.classList.remove('active'));
+
+                // Adiciona a classe 'active' ao link e seção correspondentes
+                const activeLink = document.querySelector(`.sidebar-link[href="${hash}"]`);
+                const activeSection = document.querySelector(hash);
+
+                if (activeLink && activeSection) {
+                    activeLink.classList.add('active');
+                    activeSection.classList.add('active');
+                    headerTitle.textContent = activeLink.textContent.trim();
+                }
+            }
+
+            // Listener para os cliques nos links do menu
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const hash = this.getAttribute('href');
+                    changeTab(hash);
+                    // Atualiza a URL para refletir a aba atual (opcional)
+                    history.pushState(null, null, hash);
+                });
+            });
+
+            // Verifica se há uma âncora na URL ao carregar a página
+            if (window.location.hash) {
+                changeTab(window.location.hash);
+            } else {
+                // Se não houver, ativa a primeira aba por padrão
+                changeTab('#lotações');
+            }
+        });
+    </script>
+
 </body>
 </html>
