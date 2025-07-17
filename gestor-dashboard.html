@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Gestor Escolar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Bem-vindo, <span id="nome"></span> (Gestor)</h1>
+  <p>Escola: <span id="escola"></span></p>
+
+  <h2>Lotação da Unidade</h2>
+  <div id="lotacaoContainer">Carregando...</div>
+
+  <h2>Informações</h2>
+  <p>Aqui você pode ver relatórios da sua unidade, comunicados, e status de professores.</p>
+
+  <script>
+    document.getElementById("nome").innerText = localStorage.getItem("nome");
+    document.getElementById("escola").innerText = localStorage.getItem("escola");
+
+    // Aqui você pode adicionar a função para carregar a lotação da escola
+  </script>
+</body>
+</html>

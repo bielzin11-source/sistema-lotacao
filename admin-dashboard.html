@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Administrador</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Bem-vindo, <span id="nome"></span> (Administrador)</h1>
+
+  <nav>
+    <button onclick="mostrarSecao('lotacoes')">Lotação Geral</button>
+    <button onclick="mostrarSecao('relatorios')">Relatórios</button>
+    <button onclick="mostrarSecao('junta')">Junta Médica</button>
+    <button onclick="mostrarSecao('licenca')">Licença Prêmio</button>
+    <button onclick="mostrarSecao('memorando')">Gerar Memorando</button>
+  </nav>
+
+  <section id="lotacoes">Carregando todas as lotações...</section>
+  <section id="relatorios" style="display:none;">Gerar relatórios por escola ou geral.</section>
+  <section id="junta" style="display:none;">Painel da junta médica.</section>
+  <section id="licenca" style="display:none;">Controle de licença prêmio.</section>
+  <section id="memorando" style="display:none;">Gerador de memorando de lotação.</section>
+
+  <script>
+    document.getElementById("nome").innerText = localStorage.getItem("nome");
+
+    function mostrarSecao(secao) {
+      document.querySelectorAll("section").forEach(s => s.style.display = "none");
+      document.getElementById(secao).style.display = "block";
+    }
+
+    // Aqui você poderá carregar os dados da planilha usando a API
+  </script>
+</body>
+</html>
