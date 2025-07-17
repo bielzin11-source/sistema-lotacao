@@ -26,3 +26,21 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     document.getElementById('message').textContent = 'Erro ao conectar com o servidor.';
   });
 });
+.then(data => {
+  if (data.status === "success") {
+    // Salvando dados no localStorage
+    localStorage.setItem("cpf", data.cpf);
+    localStorage.setItem("nome", data.nome);
+    localStorage.setItem("acesso", data.acesso);
+    localStorage.setItem("escola", data.escola || ""); // Só para gestor
+
+    // Redirecionando
+    if (data.acesso === "ADMINISTRADOR") {
+      window.location.href = "admin-dashboard.html";
+    } else if (data.acesso === "GESTOR") {
+      window.location.href = "gestor-dashboard.html";
+    }
+  } else {
+    document.getElementById("message").textContent = "CPF ou senha incorretos.";
+  }
+})
